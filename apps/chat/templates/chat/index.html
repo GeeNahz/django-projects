@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %} Welcome to Chat lobby {% endblock %}
+
+
+{% block content %}
+<section class="container">
+    <h2 class="page-title text-center my-5">Chat Rooms</h2>
+
+    <div class="d-flex flex-column w-50 mx-auto">
+        <h5>What chat room would you like to enter?</h5>
+    
+        <form>
+            <label for="room-name" class="form-label">Room name</label>
+            <input type="text" name="room-name" id="room-name" class="form-control" placeholder="my_room_name">
+            <div class="form-text" id="help-text">Room name only supports alphanumeric and underscore characters</div>
+
+            <div class="d-grid mt-3">
+                <input type="submit" value="Submit" id="submit-btn" class="btn btn-success">
+            </div>
+        </form>
+    </div>
+</section>
+
+
+<script>
+    document.querySelector('#room-name').focus()
+
+    const form = document.querySelector('form')
+    
+    form.addEventListener('submit', (e) => {
+        e.preventDefault()
+        const roomName = document.querySelector('#room-name').value
+
+        if (roomName !== '') {
+            // route to room using room name
+            window.location.pathname = '/chat/' + roomName + '/'
+        }
+    })
+</script>
+{% endblock %}

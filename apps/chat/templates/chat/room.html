@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %} {{ room_name }} {% endblock %}
+
+{% block content %}
+<section class="container">
+    <h2 class="page-title text-center my-5">{{ room_name }}</h2>
+    
+    <div class="w-50 mx-auto">
+        <div style="min-height: 150px;" id="chats" class="w-100 mb-5 bg-body-tertiary p-3 rounded"></div>
+        <div class="d-flex gap-3">
+            <input type="text" name="chat-message" id="chat-message-input" class="form-control" size="100">
+            <input type="button" value="Send" id="chat-message-submit" class="btn btn-primary">
+        </div>
+    </div>
+
+    {{ room_name|json_script:"room-name" }}
+</section>
+
+
+<script>
+    const roomName = JSON.parse(document.getElementById('room-name').textContent)
+
+    const chatSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
+    )
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data)
+        const pTag = document.createElement('p')
+        pTag.classList.add('fs-6')
+        pTag.textContent = data.message
+
+        document.querySelector('#chats').appendChild(pTag)
+    }
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly')
+    }
+
+    chatLog = document.querySelector('#chat-message-input')
+    submitBtn = document.querySelector('#chat-message-submit')
+
+    chatLog.focus()
+    chatLog.addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') {
+            submitBtn.click()
+        }
+    })
+
+    submitBtn.addEventListener('click', (e) => {
+        const message = chatLog.value
+        chatSocket.send(JSON.stringify({
+            'message': message,
+        }))
+        chatLog.value = ''
+    })
+
+</script>
+{% endblock %}
