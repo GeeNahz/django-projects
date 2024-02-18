@@ -1,9 +1,9 @@
 ## Models
 - [ ] User
+- [x] Speaker
 - [ ] Category
 - [ ] Event
 - [ ] EventMember
-- [ ] Speaker
 - [ ] Sponsorship
 - [ ] Ticket
 - [ ] EventResource
